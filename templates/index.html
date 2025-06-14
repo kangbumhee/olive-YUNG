@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="post" class="mb-4">
+  <div class="mb-3">
+    <label for="keywords" class="form-label">검색어 (쉼표로 구분)</label>
+    <input type="text" class="form-control" id="keywords" name="keywords" value="{{ request.form.keywords or '선크림, 토너, 세럼' }}">
+  </div>
+  <div class="mb-3">
+    <label for="pages" class="form-label">크롤링 페이지 수</label>
+    <input type="number" class="form-control" id="pages" name="pages" value="{{ request.form.pages or 1 }}" min="1" max="5">
+  </div>
+  <button type="submit" class="btn btn-primary">검색</button>
+  <a href="{{ url_for('favorites') }}" class="btn btn-secondary">관심상품 보기</a>
+</form>
+{% if results %}
+<form method="post" action="{{ url_for('add_favorites') }}">
+  <table class="table table-bordered table-sm">
+    <thead class="table-light">
+      <tr>
+        <th scope="col">선택</th>
+        <th scope="col">브랜드</th>
+        <th scope="col">상품명</th>
+        <th scope="col">원가</th>
+        <th scope="col">할인가</th>
+        <th scope="col">혜택</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for p in results %}
+      <tr>
+        <td><input type="checkbox" name="select" value="{{ loop.index0 }}"></td>
+        <td>{{ p['브랜드'] }}</td>
+        <td>{{ p['상품명'] }}</td>
+        <td>{{ p['원가'] }}</td>
+        <td>{{ p['할인가'] }}</td>
+        <td>{{ p['혜택'] }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <button type="submit" class="btn btn-success">관심상품에 추가</button>
+</form>
+{% endif %}
+{% endblock %}

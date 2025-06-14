@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href="{{ url_for('index') }}" class="btn btn-secondary mb-3">검색으로 돌아가기</a>
+{% if favorites %}
+<form method="post" action="{{ url_for('refresh_favorites') }}">
+  <table class="table table-bordered table-sm">
+    <thead class="table-light">
+      <tr>
+        <th scope="col">선택</th>
+        <th scope="col">브랜드</th>
+        <th scope="col">상품명</th>
+        <th scope="col">현재가</th>
+        <th scope="col">최근 업데이트</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for p in favorites %}
+      <tr>
+        <td><input type="checkbox" name="select" value="{{ loop.index0 }}"></td>
+        <td>{{ p['브랜드'] }}</td>
+        <td>{{ p['상품명'] }}</td>
+        <td>{{ p['할인가'] }}</td>
+        <td>{{ p.get('업데이트시간', p.get('크롤링시간','')) }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <button formaction="{{ url_for('refresh_favorites') }}" formmethod="post" class="btn btn-primary">새로고침</button>
+  <button formaction="{{ url_for('remove_favorites') }}" formmethod="post" class="btn btn-danger">선택 제거</button>
+  <a href="{{ url_for('export_excel') }}" class="btn btn-success">엑셀 다운로드</a>
+</form>
+{% else %}
+<p>관심상품이 없습니다.</p>
+{% endif %}
+{% endblock %}
